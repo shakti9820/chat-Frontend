@@ -189,7 +189,7 @@ const FormContainer = styled.div`
   span {
     color: white;
     text-transform: uppercase;
-    a {
+    link {
       color: #4e0eff;
       text-decoration: none;
       font-weight: bold;

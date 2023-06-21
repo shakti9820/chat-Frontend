@@ -5,6 +5,7 @@ import Logout from "./Logout";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { sendMessageRoute, recieveMessageRoute } from "../utils/APIRoutes";
+import { BsCameraVideoFill, BsThreeDotsVertical } from "react-icons/bs";
 
 export default function ChatContainer({ currentChat, socket }) {
   const [messages, setMessages] = useState([]);
@@ -22,16 +23,16 @@ export default function ChatContainer({ currentChat, socket }) {
     setMessages(response.data);
   }, [currentChat]);
 
-  useEffect(() => {
-    const getCurrentChat = async () => {
-      if (currentChat) {
-        await JSON.parse(
-          localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-        )._id;
-      }
-    };
-    getCurrentChat();
-  }, [currentChat]);
+  // useEffect(() => {
+  //   const getCurrentChat = async () => {
+  //     if (currentChat) {
+  //       await JSON.parse(
+  //         localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
+  //       )._id;
+  //     }
+  //   };
+  //   getCurrentChat();
+  // }, [currentChat]);
 
   const handleSendMsg = async (msg) => {
     const data = await JSON.parse(
@@ -61,7 +62,8 @@ export default function ChatContainer({ currentChat, socket }) {
     if (socket.current) {
       socket.current.on("msg-recieve", (msg) => {
         setArrivalMessage({ fromSelf: false, message: msg });
-        console.log(1 + "New messages from"+ data.username);
+        // console.log(1 + " New messages from "+ currentChat.username);
+        // console.log(msg);
       });
     }
   }, []);
@@ -83,7 +85,12 @@ export default function ChatContainer({ currentChat, socket }) {
             <h3>{currentChat.username}</h3>
           </div>
         </div>
-        <Logout />
+           {/*Here we write a functionality of profile view,video call etc*/}
+        <div className="topleft">
+        <div ><BsCameraVideoFill/></div>
+        <div><BsThreeDotsVertical/></div>
+        </div>
+     
       </div>
       <div className="chat-messages">
         {messages.map((message) => {
@@ -137,6 +144,13 @@ const Container = styled.div`
       }
     }
   }
+  .topleft{
+    // border: 2px solid red;
+    width: 10%;
+    // font-size: 10%
+    display: flex;
+    justify-content:space-around;
+   }
   .chat-messages {
     padding: 1rem 2rem;
     display: flex;
@@ -175,6 +189,7 @@ const Container = styled.div`
         background-color: #4f04ff21;
       }
     }
+   
     .recieved {
       justify-content: flex-start;
       .content {

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
+import Logout from "./Logout";
+
 
 export default function Contacts({ contacts, changeChat }) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
@@ -25,8 +27,11 @@ export default function Contacts({ contacts, changeChat }) {
         <Container>
           <div className="brand">
             <img src={Logo} alt="logo" />
+           
             <h3>Chatty</h3>
+            <span><Logout/></span>
           </div>
+          
           <div className="contacts">
             {contacts.map((contact, index) => {
               return (
@@ -99,34 +104,36 @@ const Container = styled.div`
       gap: 1rem;
       align-items: center;
       transition: 0.5s ease-in-out;
-      .avatar {
-        img {
-          height: 3rem;
-        }
-      }
-      .username {
-        h3 {
-          color: black;
-        }
-      }
+      // .avatar {
+      //   img {
+      //     height: 3rem;
+      //   }
+      // }
+      // .username {
+      //   h3 {
+      //     color: black;
+      //   }
+      // }
     }
     .selected {
       background-color: #9a86f3;
     }
   }
-
+   .brand span{
+    margin-left: 100px;
+   }
   .current-user {
     background-color: #0d0d30;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 2rem;
-    .avatar {
-      img {
-        height: 4rem;
-        max-inline-size: 100%;
-      }
-    }
+    // .avatar {
+    //   img {
+    //     height: 4rem;
+    //     max-inline-size: 100%;
+    //   }
+    // }
     .username {
       h2 {
         color: white;

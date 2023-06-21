@@ -10,7 +10,6 @@ export default function App() {
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/setAvatar" element={<SetAvatar />} /> */}
         <Route path="/" element={<Chat />} />
       </Routes>
     </BrowserRouter>
