@@ -1,8 +1,8 @@
 # This Website is Live 
-https://socialmediamernproject.netlify.app
+https://chatty4u.netlify.app/
 
 # Backend
-https://github.com/ayush-ambasta/Mern-Project-1-Backend
+https://github.com/shakti9820/chat-Backend
 
 
 
