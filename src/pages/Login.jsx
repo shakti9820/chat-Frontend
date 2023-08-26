@@ -52,9 +52,10 @@ export default function Login() {
         toast.error(data.msg, toastOptions);
       }
       if (data.status === true) {
+        // console.log(data.token);
         localStorage.setItem(
           process.env.REACT_APP_LOCALHOST_KEY,
-          JSON.stringify(data.user)
+          (data.token)
         );
 
         navigate("/");

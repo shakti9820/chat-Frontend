@@ -2,20 +2,45 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
 import Logout from "./Logout";
+import { getData } from "../utils/APIRoutes";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Contacts({ contacts, changeChat }) {
+  const navigate = useNavigate();
   const [currentUserName, setCurrentUserName] = useState(undefined);
  
   const [currentSelected, setCurrentSelected] = useState(undefined);
-  useEffect(async () => {
-    const data = await JSON.parse(
-      localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-    );
-    setCurrentUserName(data.username);
+  // useEffect(async () => {
+  //   const data = await JSON.parse(
+  //     localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
+  //   );
+  //   setCurrentUserName(data.username);
   
+  // }, []);
+
+
+  useEffect(async () => {
+    
+      
+      const token=localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY);
+      if(token){
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      const {data }= await axios.get(`${getData}`);
+      // console.log(data.username);
+      setCurrentUserName(
+        data.username
+      );
+    }
+    else{
+      localStorage.removeItem(process.env.REACT_APP_LOCALHOST_KEY)
+      navigate("/login");
+    }
+    
   }, []);
   const changeCurrentChat = (index, contact) => {
+    // console.log(contact);
     setCurrentSelected(index);
     changeChat(contact);
   };
@@ -104,16 +129,7 @@ const Container = styled.div`
       gap: 1rem;
       align-items: center;
       transition: 0.5s ease-in-out;
-      // .avatar {
-      //   img {
-      //     height: 3rem;
-      //   }
-      // }
-      // .username {
-      //   h3 {
-      //     color: black;
-      //   }
-      // }
+   
     }
     .selected {
       background-color: #9a86f3;
@@ -128,12 +144,7 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     gap: 2rem;
-    // .avatar {
-    //   img {
-    //     height: 4rem;
-    //     max-inline-size: 100%;
-    //   }
-    // }
+  
     .username {
       h2 {
         color: white;

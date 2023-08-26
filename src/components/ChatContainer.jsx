@@ -1,26 +1,39 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
-import Logout from "./Logout";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
-import { sendMessageRoute, recieveMessageRoute } from "../utils/APIRoutes";
+import { useNavigate } from "react-router-dom";
+import { sendMessageRoute, recieveMessageRoute,getData } from "../utils/APIRoutes";
 import { BsCameraVideoFill, BsThreeDotsVertical } from "react-icons/bs";
 
 export default function ChatContainer({ currentChat, socket }) {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
   useEffect(async () => {
-    const data = await JSON.parse(
-      localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-    );
+    // const data = await JSON.parse(
+    //   localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
+    // );
+
+    const token=localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY);
+      if(token){
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      const {data }= await axios.get(`${getData}`);
+
+
     const response = await axios.post(recieveMessageRoute, {
       from: data._id,
       to: currentChat._id,
     });
     setMessages(response.data);
+  }
+  else{
+    localStorage.removeItem(process.env.REACT_APP_LOCALHOST_KEY)
+      navigate("/login");
+  }
   }, [currentChat]);
 
   // useEffect(() => {
@@ -35,9 +48,16 @@ export default function ChatContainer({ currentChat, socket }) {
   // }, [currentChat]);
 
   const handleSendMsg = async (msg) => {
-    const data = await JSON.parse(
-      localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-    );
+    // const data = await JSON.parse(
+    //   localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
+    // );
+
+    const token=localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY);
+      if(token)
+      {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      const {data }= await axios.get(`${getData}`);
+
     socket.current.emit("send-msg", {
       to: currentChat._id,
       from: data._id,
@@ -52,11 +72,16 @@ export default function ChatContainer({ currentChat, socket }) {
     const msgs = [...messages];
     msgs.push({ fromSelf: true, message: msg });
     setMessages(msgs);
+    }
+    else{
+      localStorage.removeItem(process.env.REACT_APP_LOCALHOST_KEY)
+      navigate("/login");
+    }
   };
      
-  const data =async()=> await JSON.parse(
-    localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-  );
+  // const data =async()=> await JSON.parse(
+  //   localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
+  // );
   useEffect(() => {
    
     if (socket.current) {
@@ -132,11 +157,11 @@ const Container = styled.div`
       display: flex;
       align-items: center;
       gap: 1rem;
-      .avatar {
-        img {
-          height: 3rem;
-        }
-      }
+      // .avatar {
+      //   img {
+      //     height: 3rem;
+      //   }
+      // }
       .username {
         h3 {
           color: black;

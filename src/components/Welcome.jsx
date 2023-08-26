@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Robot from "../assets/robot.gif";
+import axios from "axios";
+import { getData } from "../utils/APIRoutes";
 export default function Welcome() {
   const [userName, setUserName] = useState("");
   useEffect(async () => {
-    setUserName(
-      await JSON.parse(
-        localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-      ).username
-    );
+    const token=localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      const {data }= await axios.get(`${getData}`);
+      // console.log(data);
+      setUserName(
+        data.username
+      );
   }, []);
   return (
     <Container>

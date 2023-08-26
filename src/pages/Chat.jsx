@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import styled from "styled-components";
-import { allUsersRoute, host } from "../utils/APIRoutes";
+import { allUsersRoute, host,getData } from "../utils/APIRoutes";
 import ChatContainer from "../components/ChatContainer";
 import Contacts from "../components/Contacts";
 import Welcome from "../components/Welcome";
@@ -15,14 +15,22 @@ export default function Chat() {
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
   useEffect(async () => {
-    if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
+    try{
+      if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/login");
     } else {
+      const token=localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      const {data }= await axios.get(`${getData}`);
+      // console.log(data);
       setCurrentUser(
-        await JSON.parse(
-          localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-        )
+        data
       );
+    }
+  }
+    catch{
+      localStorage.removeItem(process.env.REACT_APP_LOCALHOST_KEY)
+      navigate("/login");
     }
   }, []);
   useEffect(() => {
@@ -33,16 +41,34 @@ export default function Chat() {
   }, [currentUser]);
 
   useEffect(async () => {
-    if (currentUser) {
-    
-        const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-        setContacts(data.data);
+    // if (currentUser) {
+    //   const token=localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY);
+    //   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    //     const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
+    //     // console.log(data);
+    //     setContacts(data.data);
      
+    // }
+
+
+    try{
+        if (currentUser) {
+      const token=localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const {data} = await axios.get(`${allUsersRoute}/${currentUser._id}`);
+        // console.log(data);
+        setContacts(data);
+     
+    }
+  }
+    catch{
+      localStorage.removeItem(process.env.REACT_APP_LOCALHOST_KEY)
+      navigate("/login");
     }
   }, [currentUser]);
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
-    // console.log(chat.username)
+    // console.log(chat);
     // console.log(currentUser)
   };
   return (
